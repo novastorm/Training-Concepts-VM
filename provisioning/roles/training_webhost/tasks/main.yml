@@ -36,7 +36,7 @@
 
 - name: Install Apache2 conf
   copy:
-    content: "WSGIScriptAlias /cttest /usr/share/training-concepts/public/app.wsgi"
+    content: "WSGIScriptAlias / /usr/share/training-concepts/public/app.wsgi"
     dest: /etc/training-concepts/apache2.conf
     mode: 0644
 
