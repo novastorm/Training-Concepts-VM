@@ -1,0 +1,3 @@
+- name: Upgrade installed packages
+  apt: upgrade=safe
+  become: yes

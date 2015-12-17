@@ -1,0 +1,9 @@
+- name: Install Apache2
+  # become: yes
+  apt:
+    pkg: "{{item}}"
+    update_cache: yes
+    state: latest
+  with_items:
+    - apache2
+

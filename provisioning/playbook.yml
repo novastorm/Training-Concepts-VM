@@ -1,0 +1,8 @@
+---
+- hosts: main
+  gather_facts: no
+  become: yes
+
+  roles:
+    - web_server
+    - training_webhost

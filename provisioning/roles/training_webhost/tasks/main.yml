@@ -1,0 +1,53 @@
+- name: Install packages
+  apt:
+    pkg: "{{item}}"
+    update_cache: yes
+    state: latest
+  with_items:
+    - libapache2-mod-wsgi
+    - git
+    - python-virtualenv
+
+- name: Enable mod-wsgi
+  apache2_module:
+    name: wsgi
+    state: present
+  notify:
+    - restart apache2
+
+- name: Clone project repo
+  git:
+    repo: https://github.com/novastorm/Training-Concepts.git
+    dest: /usr/share/training-concepts
+    version: develop
+    force: yes
+
+- name: Update requirements
+  pip:
+    virtualenv: /usr/share/training-concepts
+    # virtualenv_python: python2.7
+    requirements: /usr/share/training-concepts/requirements.txt
+
+- name: Add directory /etc/training-concepts
+  file:
+    path: /etc/training-concepts
+    state: directory
+    mode: 0755
+
+- name: Install Apache2 conf
+  copy:
+    content: "WSGIScriptAlias /cttest /usr/share/training-concepts/public/app.wsgi"
+    dest: /etc/training-concepts/apache2.conf
+    mode: 0644
+
+- name: Create apache conf link
+  file:
+    src: /etc/training-concepts/apache2.conf
+    dest: /etc/apache2/conf-available/training-concepts.conf
+    state: link
+
+- name: Enable apache conf
+  command: a2enconf training-concepts
+  notify:
+    - restart apache2
+    
